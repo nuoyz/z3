@@ -3,10 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "cnpm": "^5.1.1",
+    "events": "^1.1.1",
+    "immutable": "^3.8.2",
+    "install": "^0.10.2",
     "material-ui": "next",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-scripts": "1.0.17"
+    "react-scripts": "1.0.17",
+    "slate": "^0.31.7",
+    "slate-react": "^0.10.22"
   },
   "scripts": {
     "start": "react-scripts start",

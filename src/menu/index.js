@@ -1,13 +1,20 @@
 import React, { Component } from 'react';
 
 class Menu extends Component {
+  state = {}
+  addNewDiary = () => {
+    window.rdEvent.emit('openEditor');
+    this.setState({display: 'none'})
+  }
   render() {
+    const {width = 64, display = 'block'} = this.state;
     return (
       <div
         style={{
           display: 'flex',
           flexDirection: 'column',
-          width: 64,
+          display,
+          width,
           height: '100%',
           backgroundColor: '#f8f8f8',
           paddingTop: 12,
@@ -22,6 +29,7 @@ class Menu extends Component {
         </div>
         <div>
             <div
+              onClick={this.addNewDiary}
               style={{width: 42, height: 42}}
             >
               <img
