@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import SlateRichTextEditor from './editor';
+import SlateEditor from './editor';
 import {} from 'slate';
 class Diary extends Component {
   state = {}
@@ -39,7 +39,7 @@ class Diary extends Component {
            }}>完成</button>
          </div>
        </div>
-        
+       <SlateEditor/>
       </div>
     );
   }
