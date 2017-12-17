@@ -10,9 +10,11 @@ class App extends Component {
       <div
         style={{
           display: 'flex',
-          flexDirection: 'row',
+          //flexDirection: 'row',
+          overflowX: 'hidden',
           width: '100%',
-          height: 880
+          height: 880,
+          position: 'absolute'
         }}
       >
         <Menu/>
