@@ -6,6 +6,8 @@ class DiariesList extends Component {
     return (
       <div
         style={{
+          flexGrow: 0,
+          flexShrink: 0,
           width: 335,
           height: 120,
           textAlign: 'left',
@@ -13,7 +15,8 @@ class DiariesList extends Component {
           color: '#878787',
           border: '3px solid #d9d9d9',
           borderWidth: v === 3 ? 3 : 0,
-          padding: '12px 24px 15px 24px'
+          padding: '12px 24px 15px 24px',
+          background: '#ffffff'
         }}
       >
         <div

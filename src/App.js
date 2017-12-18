@@ -13,8 +13,9 @@ class App extends Component {
           //flexDirection: 'row',
           overflowX: 'hidden',
           width: '100%',
-          height: 880,
-          position: 'absolute'
+          height: '100%',
+          position: 'absolute',
+          background: '#ffffff'
         }}
       >
         <Menu/>
