@@ -73,7 +73,9 @@ class RichTextExample extends React.Component {
    */
 
   onChange = ({ value }) => {
+    console.log('Valie value', value);
     this.setState({ value })
+    this.props.onChange(value)
   }
 
   /**
@@ -257,6 +259,7 @@ class RichTextExample extends React.Component {
    */
 
   renderEditor = () => {
+    console.log('this.state.value', this.state.value);
     return (
       <div className="editor">
         <Editor

@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
+import {fromJS} from 'immutable';
+import initialValue from '../diary/editor/slateEditor/value.json';
 
 class DiariesList extends Component {
   state = {}
   renderItem = (v) => {
+    const editValue = v.toJS();
+    console.log('editValue', editValue);
     return (
       <div
         style={{
@@ -50,16 +54,21 @@ class DiariesList extends Component {
        </div>
       )
   };
+  componentWillMount() {
+    const diariesList = localStorage.getItem(diariesList) || [fromJS(initialValue)];
+    this.setState({diariesList});
+  }
   componentDidMount() {
-    console.log('ddddddddddddddddd');
-    console.log('window.rdEvents', window.rdEvent);
     window.rdEvent.on('openEditor', () => {
-      console.log('render render render');
       this.setState({display: 'none'})
+    });
+    window.rdEvent.on('editUpdate', () => {
+      const diariesList = localStorage.getItem(diariesList);
+      this.setState({diariesList});
     });
   }
   render() {
-    const {display = 'block'} = this.state;
+    const {display = 'block', diariesList} = this.state;
     console.log('display', display);
     return (
       <div
@@ -102,7 +111,7 @@ class DiariesList extends Component {
           <span>851条笔记</span><span>选项</span>
         </div>
         <div style={{height: 849, overflowX: 'hidden', overflowY: 'scroll', boxSizing: 'border-box'}}>
-          {([1,2,3,4,5,6]).map((v) => this.renderItem(v))}
+          {diariesList.map((v) => this.renderItem(v))}
         </div>
       </div>
     );

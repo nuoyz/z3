@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import SlateEditor from './editor';
-import Repo from './repo';
+//import Repo from './repo';
 import Button from 'material-ui/Button';
 
 const styles = {
@@ -14,17 +14,18 @@ class Diary extends Component {
       console.log('render render render');
       this.setState({
         width: '100%',
-        left: '-72px'
+        left: '-72px',
+        marginLeft: 0
       })
     });
   }
   render() {
-    const {width = '100%', left = 0} = this.state;
+    const {width = '100%', left = 0, marginLeft = 422} = this.state;
     console.log('editor', this.state.repoWidth);
     return (
       <div
         style={{
-          marginLeft: 422,
+          marginLeft,
           flexGrow: 0,
           flexShrink: 1,
           //width: '100%',
@@ -38,24 +39,45 @@ class Diary extends Component {
           backgroundColor: '#ffffff'
         }}
       >
-        <div style={{display: 'flex', justifyContent: 'flex-end'}}>
-          <Button
-            onClick={() => {
-              console.log('123456');
-              const { repoWidth } = this.state;
-              const rw = repoWidth === 240 ? 0 : 240;
-              console.log('rw', rw);
-              this.setState({repoWidth: rw})}
-            }
-            raised
-            color="accent"
-            style={{marginRight: 10}}
+        <div style={{display: 'flex', justifyContent: 'space-between'}}>
+          <div>
+            <Button
+              onClick={() => {
+                console.log('123456');
+                const { marginLeft } = this.state;
+                const ml = marginLeft === 422 ? 0 : 422;
+                console.log('rw', ml);
+                this.setState({marginLeft: ml})}
+              }
+              raised
+              color="accent"
+              style={{marginRight: 10}}
             >
-            open
-          </Button>
-          <Button raised color="primary">
-            repo
-          </Button>
+              详情
+            </Button>
+            <Button raised color="primary">
+              配置
+            </Button>
+          </div>
+          <div>
+            <Button
+              onClick={() => {
+                console.log('123456');
+                const { marginLeft } = this.state;
+                const ml = marginLeft === 422 ? 0 : 422;
+                console.log('rw', ml);
+                this.setState({marginLeft: ml})}
+              }
+              raised
+              color="accent"
+              style={{marginRight: 10}}
+              >
+              open
+            </Button>
+            <Button raised color="primary">
+              repo
+            </Button>
+          </div>
         </div>
         <div
           style={{
@@ -63,8 +85,16 @@ class Diary extends Component {
             justifyContent: 'center'
           }}
         >
-          <SlateEditor/>
-          <Repo repoWidth={this.state.repoWidth || 240}/>
+          <SlateEditor
+            onChange={
+              (v) => {
+                const diariesList = localStorage.getItem(diariesList);
+                diariesList.push(v)
+                localStorage.setItem(diariesList);
+                window.rdEvent.emit('editUpdate');
+              }
+            }
+          />
         </div>
       </div>
     );

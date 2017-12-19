@@ -45,7 +45,7 @@ class SlateEditor extends Component {
       }}
     >
       <div style={styles.textarea}>
-        <RichTextExample/>
+        <RichTextExample onChange={(v)=> console.log(v.toJS())}/>
       </div>
     </div>
   )
