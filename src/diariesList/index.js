@@ -6,6 +6,8 @@ import initialValue from '../diary/editor/slateEditor/value.json';
 class DiariesList extends Component {
   state = {}
   renderItem = (v) => {
+    console.log('v.date', v.date);
+    const {activeId} = this.state;
     return (
       <div
         style={{
@@ -19,8 +21,19 @@ class DiariesList extends Component {
           border: '3px solid #d9d9d9',
           borderWidth: v === 3 ? 3 : 0,
           padding: '12px 24px 15px 24px',
-          background: '#ffffff'
+          background: '#ffffff',
+          borderType: 'solid ',
+          borderColor: '#d9d9d9',
+          borderWidth: activeId === v.id ? 3 : 0,
+          borderBottomWidth: 1 //3px solid #d9d9d9
         }}
+        onClick={
+          () => {
+            console.log('id', v.id);
+            window.rdEvent.emit('activeUpdate', v.id);
+            this.setState({activeId: v.id})
+          }
+        }
       >
         <div
           style={{height: 104, overflow: 'hidden'}}

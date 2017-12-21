@@ -39,7 +39,9 @@ class Menu extends Component {
     }
     console.log('diariesList', diariesList);
     const id = Math.random().toString(36).substr(2);
-    diariesList.push({id, active: true, date: moment().format('MMMM Do YYYY, h:mm:ss a')});
+    const date = moment();
+    console.log('date', date);
+    diariesList.unshift({id, active: true, date});
     store.set('diariesList', diariesList);
   }
   topButtonMenu = [

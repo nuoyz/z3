@@ -12,6 +12,7 @@ import Dialog, {
   DialogTitle,
 } from 'material-ui/Dialog'
 import Slide from 'material-ui/transitions/Slide'
+import store from 'store';
 
 const styles = {
   container: {}
@@ -65,12 +66,22 @@ class Diary extends Component {
         marginLeft: 0
       })
     });
+    window.rdEvent.on('activeUpdate', (id) => {
+      console.log('activeUpdate');
+      const diariesList = store.get('diariesList');
+      const targetIndex = diariesList.findIndex((v) => {
+        return v.id === id
+      });
+      const targetDiary = diariesList[targetIndex];
+      console.log('targetDiary', targetDiary);
+      this.setState({slateValue: targetDiary.value, titleValue: targetDiary.title})
+    });
   }
   render() {
     const {width = '100%', left = 0, marginLeft = 422} = this.state;
     console.log('editor', this.state.repoWidth);
     const open = Boolean(this.state.anchorEl);
-    console.log('this.state.anchorEl', this.state.anchorEl);
+    console.log('this.state.anchorEl', this.state.titleValue);
 
     return (
       <div
@@ -158,6 +169,8 @@ class Diary extends Component {
           }}
         >
           <SlateEditor
+            slateValue={this.state.slateValue}
+            titleValue={this.state.titleValue}
             onChange={
               (v) => {
                 const diariesList = localStorage.getItem(diariesList);

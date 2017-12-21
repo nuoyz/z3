@@ -185,7 +185,18 @@ class RichTextExample extends React.Component {
    * @return {Element}
    */
 
+  componentWillMount() {
+    const {slateValue} = this.props;
+    console.log('slateValue', slateValue);
+    this.setState({value: slateValue || Value.fromJSON(initialValue)})
+  }
+  componentWillReceiveProps(nextProps) {
+    if (this.state.slateValue !== nextProps.slateValue) {
+      this.setState({value: nextProps.slateValue || Value.fromJSON(initialValue)});
+    }
+  }
   render() {
+    console.log('titleValue', this.props, this.props.titleValue);
     return (
       <div>
         {this.renderToolbar()}
@@ -198,6 +209,7 @@ class RichTextExample extends React.Component {
           helperText="Full width!"
           fullWidth
           margin="normal"
+          value={this.props.titleValue}
           onChange={
             (e) => {
               const value = e.target.value;

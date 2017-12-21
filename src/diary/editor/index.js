@@ -48,14 +48,16 @@ class SlateEditor extends Component {
     >
       <div style={styles.textarea}>
         <RichTextExample
+          slateValue={this.props.slateValue}
+          titleValue={this.props.titleValue}
           onChange={(v)=> {
-          console.log(v.toJS())
-          const slateValue = v.toJS();
-          const diariesList = store.get('diariesList');
-          console.log('diariesList', diariesList);
-          const index = diariesList.findIndex((v) => v.active);
-          diariesList[index].slateValue = slateValue;
-          store.set('diariesList', diariesList);
+            console.log(v.toJS())
+            const slateValue = v.toJS();
+            const diariesList = store.get('diariesList');
+            console.log('diariesList', diariesList);
+            const index = diariesList.findIndex((v) => v.active);
+            diariesList[index].slateValue = slateValue;
+            store.set('diariesList', diariesList);
         }}
       />
       </div>
