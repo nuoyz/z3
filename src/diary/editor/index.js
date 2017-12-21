@@ -19,6 +19,7 @@ const styles = {
 }
 
 class SlateEditor extends Component {
+  state={}
   editorTool = [
     {style: styles.editorTool},
     {style: styles.editorTool},
