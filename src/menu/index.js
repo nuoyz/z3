@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import store from 'store';
+import moment from 'moment';
 import o1 from '../img/o1.png';
 import o2 from '../img/o2.png';
 import o3 from '../img/o3.png';
@@ -29,6 +31,16 @@ class Menu extends Component {
   addNewDiary = () => {
     window.rdEvent.emit('openEditor');
     //this.setState({display: 'none'})
+    let diariesList =store.get('diariesList');
+    if (Array.isArray(diariesList)) {
+      diariesList = diariesList;
+    } else {
+      diariesList = [];
+    }
+    console.log('diariesList', diariesList);
+    const id = Math.random().toString(36).substr(2);
+    diariesList.push({id, active: true, date: moment().format('MMMM Do YYYY, h:mm:ss a')});
+    store.set('diariesList', diariesList);
   }
   topButtonMenu = [
     {event: this.addNewDiary, src: o1, style: styles.menuStyle, imgStyle: styles.imgStyle},

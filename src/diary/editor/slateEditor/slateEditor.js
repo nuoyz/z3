@@ -1,9 +1,11 @@
 import { Editor } from 'slate-react'
 import { Value } from 'slate'
+import store from 'store';
 
 import React from 'react'
 import initialValue from './value.json'
 import { isKeyHotkey } from 'is-hotkey'
+import TextField from 'material-ui/TextField'
 import './index.css'
 /**
  * Define the default node type.
@@ -187,6 +189,27 @@ class RichTextExample extends React.Component {
     return (
       <div>
         {this.renderToolbar()}
+        <TextField
+          id="full-width"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          placeholder="Title"
+          helperText="Full width!"
+          fullWidth
+          margin="normal"
+          onChange={
+            (e) => {
+              const value = e.target.value;
+              const diariesList = store.get('diariesList');
+              console.log('diariesList', diariesList);
+              const index = diariesList.findIndex((v) => v.active);
+              diariesList[index].title = value;
+              store.set('diariesList', diariesList);
+              window.rdEvent.emit('editUpdate');
+            }
+          }
+        />
         {this.renderEditor()}
       </div>
     )

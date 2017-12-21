@@ -1,5 +1,6 @@
-import React, { Component } from 'react'
-import RichTextExample from './slateEditor/slateEditor'
+import React, { Component } from 'react';
+import store from 'store';
+import RichTextExample from './slateEditor/slateEditor';
 
 const styles = {
   container: {
@@ -46,7 +47,17 @@ class SlateEditor extends Component {
       }}
     >
       <div style={styles.textarea}>
-        <RichTextExample onChange={(v)=> console.log(v.toJS())}/>
+        <RichTextExample
+          onChange={(v)=> {
+          console.log(v.toJS())
+          const slateValue = v.toJS();
+          const diariesList = store.get('diariesList');
+          console.log('diariesList', diariesList);
+          const index = diariesList.findIndex((v) => v.active);
+          diariesList[index].slateValue = slateValue;
+          store.set('diariesList', diariesList);
+        }}
+      />
       </div>
     </div>
   )

@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import {fromJS} from 'immutable';
+import moment from 'moment';
+import store from 'store';
 import initialValue from '../diary/editor/slateEditor/value.json';
-
 class DiariesList extends Component {
   state = {}
   renderItem = (v) => {
-    const editValue = v.toJS();
-    console.log('editValue', editValue);
     return (
       <div
         style={{
@@ -35,35 +34,33 @@ class DiariesList extends Component {
               breakWord: 'break-word',
               lineHeight: '20px',
             }}
-          >2017 12 13</span>
+          >{v.title}</span>
           <span
             style={{
               display: 'block',
               fontSize: 11, letterSpacing: 1, marginBottom: 8
               }}
-          >2小时前</span>
-          <p
-            style={{
-              fontSize: 12,
-              lineHeight: '17px',
-              wordWrap: 'break-all',
-              width: 287
-            }}
-          >what is rxjs an api for async with observable streams  think of rxjs as lodash for event /async rxjs Observable本质是订阅发布模式 核心是数据响应式，源头是数据产生者Observable 通过一系列操作比如map filter等operators(操作符) 被数据消费者响应(subscri...</p>
-         </div>
+          >{moment(v.date).fromNow()}</span>
+       </div>
        </div>
       )
   };
   componentWillMount() {
-    const diariesList = localStorage.getItem(diariesList) || [fromJS(initialValue)];
+    let diariesList = store.get('diariesList');
+    console.log('diariesList', diariesList);
+    if (Array.isArray(diariesList)) {
+      diariesList = diariesList;
+    } else {
+      diariesList = [];
+    }
     this.setState({diariesList});
   }
   componentDidMount() {
     window.rdEvent.on('openEditor', () => {
-      this.setState({display: 'none'})
+      //this.setState({display: 'none'})
     });
     window.rdEvent.on('editUpdate', () => {
-      const diariesList = localStorage.getItem(diariesList);
+      const diariesList = store.get('diariesList');
       this.setState({diariesList});
     });
   }

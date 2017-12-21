@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import Menu from './menu';
+import moment from 'moment';
 import DiariesList from './diariesList';
 import Diary from './diary';
 import './App.css';
+
+moment.locale('zh-cn');
 
 class App extends Component {
   render() {
