@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import Menu from './menu';
-import moment from 'moment';
-import DiariesList from './diariesList';
-import Diary from './diary';
-import './App.css';
+import React, {Component} from 'react'
+import Menu from './menu'
+import moment from 'moment'
+import DiariesList from './diariesList'
+import Diary from './diary'
+import './App.css'
 
-moment.locale('zh-cn');
+moment.locale('zh-cn')
 
 class App extends Component {
   render() {
@@ -13,7 +13,7 @@ class App extends Component {
       <div
         style={{
           display: 'flex',
-          //flexDirection: 'row',
+          // flexDirection: 'row',
           overflowX: 'hidden',
           width: '100%',
           height: '100%',
@@ -21,12 +21,12 @@ class App extends Component {
           background: '#ffffff'
         }}
       >
-        <Menu/>
-        <DiariesList/>
-        <Diary/>
+        <Menu />
+        <DiariesList />
+        <Diary />
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App

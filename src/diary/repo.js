@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import SlateEditor from './editor';
-import Dialog from 'material-ui/Dialog';
-import {Modal} from 'material-ui';
-import Slide from 'material-ui/transitions/Slide';
-import { withStyles } from 'material-ui/styles';
+import React, {Component} from 'react'
+import SlateEditor from './editor'
+import Dialog from 'material-ui/Dialog'
+import {Modal} from 'material-ui'
+import Slide from 'material-ui/transitions/Slide'
+import {withStyles} from 'material-ui/styles'
 
 const styles = {
   container: {},
   root: {
-    left: '100px', 
+    left: '100px'
   },
   paper: {
     width: 720
@@ -16,15 +16,14 @@ const styles = {
   paperWidthSm: {maxWidth: 720}
 }
 function Transition(props) {
-    return <Slide direction="down" {...props} />;
-  }
+  return <Slide direction="down" {...props} />
+}
 class Repo extends Component {
   state = {showModal: false}
-  componentDidMount() {
-  }
+  componentDidMount() {}
   render() {
-    const {repoWidth = 0,} = this.props;
-    console.log('repo repowidth', repoWidth);
+    const {repoWidth = 0} = this.props
+    console.log('repo repowidth', repoWidth)
     return (
       <div
         style={{
@@ -38,13 +37,13 @@ class Repo extends Component {
         }}
       >
         <Dialog
-            classes={{
-                root: this.props.classes.root,
-                paper: this.props.classes.paper,
-                paperWidthSm: this.props.classes.paperWidthSm
-            }}
-        BackdropInvisible
-        open={this.state.showModal}
+          classes={{
+            root: this.props.classes.root,
+            paper: this.props.classes.paper,
+            paperWidthSm: this.props.classes.paperWidthSm
+          }}
+          BackdropInvisible
+          open={this.state.showModal}
           transition={Transition}
           //onRequestClose={() => this.setState({ showModal: false })}
         >
@@ -62,22 +61,20 @@ class Repo extends Component {
         </Dialog>
         <ul>
           <li
-            onClick={
-              () => {
-                console.log('6666666666');
-                let showModal = this.state.showModal;
-                showModal = showModal ? false : true;
-                this.setState({showModal});
-              }
-            }
+            onClick={() => {
+              console.log('6666666666')
+              let showModal = this.state.showModal
+              showModal = showModal ? false : true
+              this.setState({showModal})
+            }}
             style={{border: '1px solid pink'}}
           >
             修改纪录 2017 11 11 标题
           </li>
         </ul>
       </div>
-    );
+    )
   }
 }
 
-export default withStyles(styles)(Repo);
+export default withStyles(styles)(Repo)

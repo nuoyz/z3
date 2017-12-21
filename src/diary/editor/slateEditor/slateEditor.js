@@ -1,10 +1,10 @@
-import { Editor } from 'slate-react'
-import { Value } from 'slate'
-import store from 'store';
+import {Editor} from 'slate-react'
+import {Value} from 'slate'
+import store from 'store'
 
 import React from 'react'
 import initialValue from './value.json'
-import { isKeyHotkey } from 'is-hotkey'
+import {isKeyHotkey} from 'is-hotkey'
 import TextField from 'material-ui/TextField'
 import './index.css'
 /**
@@ -33,7 +33,6 @@ const isCodeHotkey = isKeyHotkey('mod+`')
  */
 
 class RichTextExample extends React.Component {
-
   /**
    * Deserialize the initial editor value.
    *
@@ -41,7 +40,7 @@ class RichTextExample extends React.Component {
    */
 
   state = {
-    value: Value.fromJSON(initialValue),
+    value: Value.fromJSON(initialValue)
   }
 
   /**
@@ -52,8 +51,8 @@ class RichTextExample extends React.Component {
    */
 
   hasMark = (type) => {
-    const { value } = this.state
-    return value.activeMarks.some(mark => mark.type == type)
+    const {value} = this.state
+    return value.activeMarks.some((mark) => mark.type == type)
   }
 
   /**
@@ -64,8 +63,8 @@ class RichTextExample extends React.Component {
    */
 
   hasBlock = (type) => {
-    const { value } = this.state
-    return value.blocks.some(node => node.type == type)
+    const {value} = this.state
+    return value.blocks.some((node) => node.type == type)
   }
 
   /**
@@ -74,9 +73,9 @@ class RichTextExample extends React.Component {
    * @param {Change} change
    */
 
-  onChange = ({ value }) => {
-    console.log('Valie value', value);
-    this.setState({ value })
+  onChange = ({value}) => {
+    console.log('Valie value', value)
+    this.setState({value})
     this.props.onChange(value)
   }
 
@@ -117,7 +116,7 @@ class RichTextExample extends React.Component {
 
   onClickMark = (event, type) => {
     event.preventDefault()
-    const { value } = this.state
+    const {value} = this.state
     const change = value.change().toggleMark(type)
     this.onChange(change)
   }
@@ -131,9 +130,9 @@ class RichTextExample extends React.Component {
 
   onClickBlock = (event, type) => {
     event.preventDefault()
-    const { value } = this.state
+    const {value} = this.state
     const change = value.change()
-    const { document } = value
+    const {document} = value
 
     // Handle everything but list buttons.
     if (type != 'bulleted-list' && type != 'numbered-list') {
@@ -145,19 +144,14 @@ class RichTextExample extends React.Component {
           .setBlock(isActive ? DEFAULT_NODE : type)
           .unwrapBlock('bulleted-list')
           .unwrapBlock('numbered-list')
+      } else {
+        change.setBlock(isActive ? DEFAULT_NODE : type)
       }
-
-      else {
-        change
-          .setBlock(isActive ? DEFAULT_NODE : type)
-      }
-    }
-
-    // Handle the extra wrapping required for list buttons.
-    else {
+    } else {
+      // Handle the extra wrapping required for list buttons.
       const isList = this.hasBlock('list-item')
       const isType = value.blocks.some((block) => {
-        return !!document.getClosest(block.key, parent => parent.type == type)
+        return !!document.getClosest(block.key, (parent) => parent.type == type)
       })
 
       if (isList && isType) {
@@ -166,13 +160,9 @@ class RichTextExample extends React.Component {
           .unwrapBlock('bulleted-list')
           .unwrapBlock('numbered-list')
       } else if (isList) {
-        change
-          .unwrapBlock(type == 'bulleted-list' ? 'numbered-list' : 'bulleted-list')
-          .wrapBlock(type)
+        change.unwrapBlock(type == 'bulleted-list' ? 'numbered-list' : 'bulleted-list').wrapBlock(type)
       } else {
-        change
-          .setBlock('list-item')
-          .wrapBlock(type)
+        change.setBlock('list-item').wrapBlock(type)
       }
     }
 
@@ -186,41 +176,39 @@ class RichTextExample extends React.Component {
    */
 
   componentWillMount() {
-    const {slateValue} = this.props;
-    console.log('slateValue', slateValue);
+    const {slateValue} = this.props
+    console.log('slateValue', slateValue)
     this.setState({value: slateValue || Value.fromJSON(initialValue)})
   }
   componentWillReceiveProps(nextProps) {
     if (this.state.slateValue !== nextProps.slateValue) {
-      this.setState({value: nextProps.slateValue || Value.fromJSON(initialValue)});
+      this.setState({value: nextProps.slateValue || Value.fromJSON(initialValue)})
     }
   }
   render() {
-    console.log('titleValue', this.props, this.props.titleValue);
+    console.log('titleValue', this.props.titleValue)
     return (
       <div>
         {this.renderToolbar()}
         <TextField
           id="full-width"
           InputLabelProps={{
-            shrink: true,
+            shrink: true
           }}
           placeholder="Title"
           helperText="Full width!"
           fullWidth
           margin="normal"
           value={this.props.titleValue}
-          onChange={
-            (e) => {
-              const value = e.target.value;
-              const diariesList = store.get('diariesList');
-              console.log('diariesList', diariesList);
-              const index = diariesList.findIndex((v) => v.active);
-              diariesList[index].title = value;
-              store.set('diariesList', diariesList);
-              window.rdEvent.emit('editUpdate');
-            }
-          }
+          onChange={(e) => {
+            const value = e.target.value
+            const diariesList = store.get('diariesList')
+            console.log('diariesList', diariesList)
+            const index = diariesList.findIndex((v) => v.active)
+            diariesList[index].title = value
+            store.set('diariesList', diariesList)
+            window.rdEvent.emit('editUpdate')
+          }}
         />
         {this.renderEditor()}
       </div>
@@ -259,7 +247,7 @@ class RichTextExample extends React.Component {
 
   renderMarkButton = (type, icon) => {
     const isActive = this.hasMark(type)
-    const onMouseDown = event => this.onClickMark(event, type)
+    const onMouseDown = (event) => this.onClickMark(event, type)
 
     return (
       <span className="button" onMouseDown={onMouseDown} data-active={isActive}>
@@ -278,7 +266,7 @@ class RichTextExample extends React.Component {
 
   renderBlockButton = (type, icon) => {
     const isActive = this.hasBlock(type)
-    const onMouseDown = event => this.onClickBlock(event, type)
+    const onMouseDown = (event) => this.onClickBlock(event, type)
 
     return (
       <span className="button" onMouseDown={onMouseDown} data-active={isActive}>
@@ -294,7 +282,7 @@ class RichTextExample extends React.Component {
    */
 
   renderEditor = () => {
-    console.log('this.state.value', this.state.value);
+    console.log('this.state.value', this.state.value)
     return (
       <div className="editor">
         <Editor
@@ -318,14 +306,20 @@ class RichTextExample extends React.Component {
    */
 
   renderNode = (props) => {
-    const { attributes, children, node } = props
+    const {attributes, children, node} = props
     switch (node.type) {
-      case 'block-quote': return <blockquote {...attributes}>{children}</blockquote>
-      case 'bulleted-list': return <ul {...attributes}>{children}</ul>
-      case 'heading-one': return <h1 {...attributes}>{children}</h1>
-      case 'heading-two': return <h2 {...attributes}>{children}</h2>
-      case 'list-item': return <li {...attributes}>{children}</li>
-      case 'numbered-list': return <ol {...attributes}>{children}</ol>
+      case 'block-quote':
+        return <blockquote {...attributes}>{children}</blockquote>
+      case 'bulleted-list':
+        return <ul {...attributes}>{children}</ul>
+      case 'heading-one':
+        return <h1 {...attributes}>{children}</h1>
+      case 'heading-two':
+        return <h2 {...attributes}>{children}</h2>
+      case 'list-item':
+        return <li {...attributes}>{children}</li>
+      case 'numbered-list':
+        return <ol {...attributes}>{children}</ol>
     }
   }
 
@@ -337,15 +331,18 @@ class RichTextExample extends React.Component {
    */
 
   renderMark = (props) => {
-    const { children, mark } = props
+    const {children, mark} = props
     switch (mark.type) {
-      case 'bold': return <strong>{children}</strong>
-      case 'code': return <code>{children}</code>
-      case 'italic': return <em>{children}</em>
-      case 'underlined': return <u>{children}</u>
+      case 'bold':
+        return <strong>{children}</strong>
+      case 'code':
+        return <code>{children}</code>
+      case 'italic':
+        return <em>{children}</em>
+      case 'underlined':
+        return <u>{children}</u>
     }
   }
-
 }
 
 /**
