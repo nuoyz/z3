@@ -89,14 +89,12 @@ class Diary extends Component {
           marginLeft,
           flexGrow: 0,
           flexShrink: 1,
-          //width: '100%',
           height: '100%',
           border: '1px solid red',
-          //position: 'absolute', //for test
+          position: 'absolute',
           transition: 'width 0.3s ease-in-out, margin 0.3s ease-in-out, left 1s ease-in-out',
-          //width: '100%',
           right: 0,
-          left: 0,
+          left: 140,
           backgroundColor: '#ffffff'
         }}
       >

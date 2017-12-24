@@ -39,7 +39,6 @@ const styles = {
 class DiariesList extends Component {
   state = {}
   renderItem = (v) => {
-    console.log('v.date', v.date)
     const {activeId} = this.state
     return (
       <div
