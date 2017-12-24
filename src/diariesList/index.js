@@ -1,13 +1,14 @@
 import React, {Component} from 'react'
-
 import moment from 'moment'
 import store from 'store'
+import TextField from 'material-ui/TextField'
 
 const styles = {
   container: {
     width: 350,
     display: 'block',
     height: '100%',
+    backgroundColor: '#f8f8f8',
     borderRightWidth: 1,
     borderRightStyle: 'solid',
     borderRightColor: '#ececec'
@@ -43,21 +44,21 @@ class DiariesList extends Component {
     return (
       <div
         style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',          
           flexGrow: 0,
           flexShrink: 0,
-          width: 335,
-          height: 120,
+          height: 60,
           textAlign: 'left',
           overflow: 'hidden',
           color: '#878787',
           border: '3px solid #d9d9d9',
-
           padding: '12px 24px 15px 24px',
-          background: '#ffffff',
           borderType: 'solid ',
           borderColor: '#d9d9d9',
           borderWidth: activeId === v.id ? 3 : 0,
-          borderBottomWidth: 1 //3px solid #d9d9d9
+          borderBottomWidth: 1
         }}
         onClick={() => {
           console.log('id', v.id)
@@ -65,30 +66,28 @@ class DiariesList extends Component {
           this.setState({activeId: v.id})
         }}
       >
-        <div style={{height: 104, overflow: 'hidden'}}>
-          <span
-            style={{
-              fontSize: 16,
-              color: '#4a4a4a',
-              fontWeight: 400,
-              whiteSpace: 'nowrap',
-              breakWord: 'break-word',
-              lineHeight: '20px'
-            }}
-          >
-            {v.title}
-          </span>
-          <span
-            style={{
-              display: 'block',
-              fontSize: 11,
-              letterSpacing: 1,
-              marginBottom: 8
-            }}
-          >
-            {moment(v.date).fromNow()}
-          </span>
-        </div>
+        <span
+          style={{
+            fontSize: 16,
+            color: '#4a4a4a',
+            fontWeight: 400,
+            whiteSpace: 'nowrap',
+            breakWord: 'break-word',
+            lineHeight: '20px'
+          }}
+        >
+          {v.title}
+        </span>
+        <span
+          style={{
+            display: 'block',
+            fontSize: 11,
+            letterSpacing: 1,
+            marginBottom: 8
+          }}
+        >
+          {moment(v.date).fromNow()}
+        </span>
       </div>
     )
   }
@@ -113,12 +112,12 @@ class DiariesList extends Component {
     const {diariesList} = this.state
     return (
       <div style={styles.container}>
-        <span style={styles.headerLeft}>笔记</span>
+        <TextField placeholder="search" style={styles.headerLeft}/>
         <div style={styles.headerRight}>
-          <span>851条笔记</span>
-          <span>选项</span>
+          <span>> update</span>
+          <span>=</span>
         </div>
-        <div style={{height: 849, overflowX: 'hidden', overflowY: 'scroll', boxSizing: 'border-box'}}>
+        <div style={{height: 836, overflowX: 'hidden', overflowY: 'auto', boxSizing: 'border-box'}}>
           {diariesList.map((v) => this.renderItem(v))}
         </div>
       </div>
