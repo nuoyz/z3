@@ -38,9 +38,10 @@ class Menu extends Component {
     const id = Math.random()
       .toString(36)
       .substr(2)
-    const date = moment()
+    const date = moment().unix()
     diariesList.unshift({id, active: true, date})
     store.set('diariesList', diariesList)
+    window.rdEvent.emit('activeUpdate', id)
   }
   topButtonMenu = [
     {event: this.addNewDiary, src: o1, style: styles.menuStyle, imgStyle: styles.imgStyle},

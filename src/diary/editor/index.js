@@ -51,12 +51,13 @@ class SlateEditor extends Component {
           slateValue={this.props.slateValue}
           titleValue={this.props.titleValue}
           onChange={(v)=> {
-            console.log(v.toJS())
-            const slateValue = v.toJS();
+            //获取 id
+            const {activeId} = this.props;
+            const slateValue = v;
             const diariesList = store.get('diariesList');
             console.log('diariesList', diariesList);
-            const index = diariesList.findIndex((v) => v.active);
-            diariesList[index].slateValue = slateValue;
+            const index = diariesList.findIndex((v) => v.id == activeId);
+            diariesList[index].value = slateValue;
             store.set('diariesList', diariesList);
         }}
       />

@@ -3,6 +3,7 @@ import {Value} from 'slate'
 import store from 'store'
 
 import React from 'react'
+import {Map, fromJS} from 'immutable'
 import initialValue from './value.json'
 import {isKeyHotkey} from 'is-hotkey'
 import TextField from 'material-ui/TextField'
@@ -52,6 +53,8 @@ class RichTextExample extends React.Component {
 
   hasMark = (type) => {
     const {value} = this.state
+    console.log('hasMark', this.state.value);
+    console.log('value.activeMarks', value.activeMarks);
     return value.activeMarks.some((mark) => mark.type == type)
   }
 
@@ -74,7 +77,7 @@ class RichTextExample extends React.Component {
    */
 
   onChange = ({value}) => {
-    console.log('Valie value', value)
+    console.log('Valie value555555555', value)
     this.setState({value})
     this.props.onChange(value)
   }
@@ -177,16 +180,25 @@ class RichTextExample extends React.Component {
 
   componentWillMount() {
     const {slateValue} = this.props
-    console.log('slateValue', slateValue)
+    console.log('slateValue3333333', Value.fromJSON(initialValue))
+    if (slateValue) {
+      this.setState({})
+    }
     this.setState({value: slateValue || Value.fromJSON(initialValue)})
   }
   componentWillReceiveProps(nextProps) {
-    if (this.state.slateValue !== nextProps.slateValue) {
-      this.setState({value: nextProps.slateValue || Value.fromJSON(initialValue)})
+    console.log('nextPops', nextProps.slateValue);
+    let nextSlateValue = nextProps.slateValue;
+    if (! Map.isMap(nextSlateValue)) {
+      nextSlateValue = fromJS(nextSlateValue);
     }
+    console.log('nextSlateValue', nextSlateValue);
+    this.setState({value: Value.fromJS(nextSlateValue) || Value.fromJSON(initialValue)})
+    this.forceUpdate()
   }
   render() {
     console.log('titleValue', this.props.titleValue)
+    console.log('render2222222222', this.state.value);
     return (
       <div>
         {this.renderToolbar()}
@@ -222,6 +234,7 @@ class RichTextExample extends React.Component {
    */
 
   renderToolbar = () => {
+    console.log('1111111111111111');
     return (
       <div className="menu toolbar-menu">
         {this.renderMarkButton('bold', 'format_bold')}
@@ -282,7 +295,6 @@ class RichTextExample extends React.Component {
    */
 
   renderEditor = () => {
-    console.log('this.state.value', this.state.value)
     return (
       <div className="editor">
         <Editor

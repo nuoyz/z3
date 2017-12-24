@@ -7,6 +7,7 @@ import Menu, {MenuItem} from 'material-ui/Menu'
 import MoreVertIcon from 'material-ui-icons/MoreVert'
 import Dialog, {DialogActions, DialogContent, DialogContentText, DialogTitle} from 'material-ui/Dialog'
 import Slide from 'material-ui/transitions/Slide'
+import TextField from 'material-ui/TextField'
 import store from 'store'
 
 const options = [
@@ -48,6 +49,20 @@ class Diary extends Component {
   handleClose = () => {
     this.setState({open: false})
   }
+  getDiaryProp = (id) => {
+     const diariesList = store.get('diariesList')
+     const targetIndex = diariesList.findIndex((v) => {
+       return v.id === id
+     })
+     const targetDiary = diariesList[targetIndex]
+     console.log('diariesList', diariesList);
+     console.log('targetDiary', targetDiary)
+     return {
+      value: targetDiary.value,
+      title: targetDiary.title,
+      id
+     }
+  }
   componentDidMount() {
     window.rdEvent.on('openEditor', () => {
       console.log('render render render')
@@ -59,20 +74,14 @@ class Diary extends Component {
     })
     window.rdEvent.on('activeUpdate', (id) => {
       console.log('activeUpdate')
-      const diariesList = store.get('diariesList')
-      const targetIndex = diariesList.findIndex((v) => {
-        return v.id === id
-      })
-      const targetDiary = diariesList[targetIndex]
-      console.log('targetDiary', targetDiary)
-      this.setState({slateValue: targetDiary.value, titleValue: targetDiary.title})
+      const {value, title} = this.getDiaryProp(id)
+      this.setState({slateValue: value, titleValue: title, activeId: id})
     })
   }
   render() {
     const {marginLeft = 422} = this.state
-    console.log('editor', this.state.repoWidth)
     const open = Boolean(this.state.anchorEl)
-    console.log('this.state.anchorEl', this.state.titleValue)
+    console.log('this.state.anchorEl', this.state.activeId, this.state.slateValue)
 
     return (
       <div
@@ -143,8 +152,16 @@ class Diary extends Component {
             >
               open
             </Button>
-            <Button raised color="primary">
-              repo
+            <Button
+              raised
+              color="primary"
+              onClick={
+                ()=>{
+                  console.log('completed completed completed')
+                  this.setState({commitModal: true})
+              }}
+            >
+              完成
             </Button>
           </div>
         </div>
@@ -158,6 +175,7 @@ class Diary extends Component {
           }}
         >
           <SlateEditor
+            activeId={this.state.activeId}
             slateValue={this.state.slateValue}
             titleValue={this.state.titleValue}
             onChange={(v) => {
@@ -168,6 +186,46 @@ class Diary extends Component {
             }}
           />
         </div>
+        <Dialog
+          open={this.state.commitModal}
+          transition={Transition}
+          keepMounted
+          onClose={()=> {
+            this.setState({commitModal: false})
+          }}
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle id="alert-dialog-slide-title">{"填写提交信息"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              <TextField
+                InputLabelProps={{
+                  shrink: true
+                }}
+                placeholder="commit msg"
+                margin="normal"
+                value={this.props.titleValue}
+                onChange={(e) => {
+                }}
+              />
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => this.setState({commitModal: false})}
+              color="primary"
+            >
+              保存
+            </Button>
+            <Button
+              onClick={() => this.setState({commitModal: false})}
+              color="primary"
+            >
+              取消
+            </Button>
+          </DialogActions>
+        </Dialog>
         <Dialog
           fullScreen
           open={this.state.open}
