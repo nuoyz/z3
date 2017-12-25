@@ -5,6 +5,10 @@ import Button from 'material-ui/Button'
 import IconButton from 'material-ui/IconButton'
 import Menu, {MenuItem} from 'material-ui/Menu'
 import MoreVertIcon from 'material-ui-icons/MoreVert'
+import InfoOutline from 'material-ui-icons/InfoOutline'
+import StarBorder from 'material-ui-icons/StarBorder'
+import ZoomOutMap from 'material-ui-icons/ZoomOutMap'
+import DeleteForever from 'material-ui-icons/DeleteForever'
 import Dialog, {DialogActions, DialogContent, DialogContentText, DialogTitle} from 'material-ui/Dialog'
 import Slide from 'material-ui/transitions/Slide'
 import TextField from 'material-ui/TextField'
@@ -89,8 +93,7 @@ class Diary extends Component {
           marginLeft,
           flexGrow: 0,
           flexShrink: 1,
-          height: '100%',
-          border: '1px solid red',
+          //height: '100%',
           position: 'absolute',
           transition: 'width 0.3s ease-in-out, margin 0.3s ease-in-out, left 1s ease-in-out',
           right: 0,
@@ -100,10 +103,10 @@ class Diary extends Component {
       >
         <div style={{display: 'flex', justifyContent: 'space-between'}}>
           <div>
-            <Button onClick={this.handleClickOpen} raised color="accent" style={{marginRight: 10}}>
+            <Button onClick={this.handleClickOpen} raised color="accent" style={{marginRight: 10, display: 'none'}}>
               详情
             </Button>
-            <Button raised color="primary">
+            <Button raised color="primary" style={{marginRight: 10, display: 'none'}}>
               配置
             </Button>
             <IconButton
@@ -114,6 +117,8 @@ class Diary extends Component {
             >
               <MoreVertIcon />
             </IconButton>
+            <InfoOutline style={{marginLeft: 0}}/>
+            <StarBorder style={{marginLeft: 10}}/>
             <Menu
               getContentAnchorEl={null}
               anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
@@ -135,7 +140,9 @@ class Diary extends Component {
               ))}
             </Menu>
           </div>
-          <div>
+          <div style={{marginTop: 10}}>
+            <DeleteForever style={{marginRight: 10}}/>
+            <ZoomOutMap style={{marginRight: 10}}/>
             <Button
               onClick={() => {
                 console.log('123456')
@@ -146,11 +153,12 @@ class Diary extends Component {
               }}
               raised
               color="accent"
-              style={{marginRight: 10}}
+              style={{marginRight: 10, display: 'none'}}
             >
               open
             </Button>
             <Button
+              style={{display: 'none'}}
               raised
               color="primary"
               onClick={
@@ -168,7 +176,6 @@ class Diary extends Component {
             display: 'flex',
             width: '100%',
             height: '100%',
-            border: '1px solid black',
             justifyContent: 'center'
           }}
         >

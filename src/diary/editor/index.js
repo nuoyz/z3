@@ -7,7 +7,7 @@ const styles = {
     padding: '0 48px',
     margin: '0 auto 38px',
     borderBottom: '1px solid #ececec',
-    border: '1px solid black'
+    //border: '1px solid black'
   },
   textarea: {
     display: 'block',

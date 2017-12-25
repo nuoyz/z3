@@ -15,6 +15,7 @@ class App extends Component {
           display: 'flex',
           // flexDirection: 'row',
           overflowX: 'hidden',
+          overflowY: 'hidden', //test
           width: '100%',
           height: '100%',
           position: 'absolute',
