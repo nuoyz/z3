@@ -6,6 +6,10 @@ import StarBorderIcon from 'material-ui-icons/StarBorder'
 import DeleteIcon from 'material-ui-icons/Delete'
 import Folder from 'material-ui-icons/Folder'
 import FolderOpen from 'material-ui-icons/FolderOpen'
+import Add from 'material-ui-icons/Add'
+import KeyboardArrowDown from 'material-ui-icons/KeyboardArrowDown'
+import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight'
+import localforage from 'localforage'
 
 const styles = {
   container: {
@@ -20,12 +24,16 @@ const styles = {
     backgroundColor: '#09040B' //#f8f8f8
   },  
   menuStyle: {width: 174, height: 42, paddingLeft: 18, paddingRight: 18, cursor: 'pointer'},
+  collapseChildStyle: {width: 154, height: 40, paddingLeft: 28, paddingRight: 18, cursor: 'pointer'},
   list: {width: '100%', height: 144, marginTop: 66, display: 'flex', flexDirection: 'column',
     justifyContent: 'space-between', alignItems: 'center'}
 }
 
 class Menu extends Component {
-  state = {}
+  state = {folderOpen: false}
+  addNewFolder = () => {
+    this.setState({op: true})
+  }
   addNewDiary = () => {
     window.rdEvent.emit('openEditor')
     let diariesList = store.get('diariesList')
@@ -41,34 +49,103 @@ class Menu extends Component {
     window.rdEvent.emit('activeUpdate', id)
   }
   topButtonMenu = [
-    {style: styles.menuStyle, text: 'All notes', icon: <EventNoteIcon/>, label: 1},
-    {style: styles.menuStyle, text: 'Starred', icon: <StarBorderIcon/>, label: 1},
-    {style: styles.menuStyle, text: 'Trash', icon: <DeleteIcon/>, label: 1}
-  ]
-  bottomButtonMenu = [
-    {event: this.addNewDiary, style: styles.menuStyle, text: 'My Storage', icon: <Folder/>, operator: '+'}
+    {style: styles.menuStyle, text: 'All notes', icon: <EventNoteIcon/>, key: 'allNotes'},
+    {style: styles.menuStyle, text: 'Starred', icon: <StarBorderIcon/>, key: 'starred'},
+    {style: styles.menuStyle, text: 'Trash', icon: <DeleteIcon/>, key: 'trash'}
   ]
   renderMenuChild = (option, index) => {
     return (
-      <div key={index} onClick={option.event || (() => {})} style={option.style}>
+      <div key={index} onClick={option.event || null} style={option.style}>
         {option.icon}
         <div style={{display: 'inline-block', 'verticalAlign': 'top', height: 36, marginLeft: 20}}>
           {option.text}
         </div>
         <span style={{display: 'inline-block', float: 'right'}}>
-          {option.label || option.operator}
+          {option.count || null}
         </span>
       </div>
     )
   }
+  folderComponent = (props) => {
+    console.log(props.folderOpen)
+    return (
+      <div
+        onClick={props.onClick || null}
+        style={styles.menuStyle}
+      >
+        {props.folderOpen ? <KeyboardArrowDown/> : <KeyboardArrowRight/>}
+        <div style={{display: 'inline-block', 'verticalAlign': 'top', height: 36, marginLeft: 20}}>
+          My Storage
+        </div>
+        <span
+          onClick={()=>{
+            this.setState({})
+          }}
+          style={{display: 'inline-block', float: 'right'}}
+        >
+          <Add/>
+        </span>
+        <div>
+          {(props.children || []).map((v) => this.renderMenuChild(v))}
+        </div>
+      </div>
+    )
+  }
+  Collapse = (props) => {
+    console.log('props.open', props.open);
+    return (
+      <div style={{display: props.open ? 'block' : 'none'}}>
+        {(props.data || []).map((value, index) => {
+          return (
+            <div
+              key={`{value.id}-${index}`}
+              style={styles.collapseChildStyle}
+            >
+              <Folder/>
+              <div style={{display: 'inline-block', 'verticalAlign': 'top', height: 36, marginLeft: 20}}>
+                {value.key}
+              </div>
+              <span style={{display: 'inline-block', float: 'right'}}>
+                {value.count}
+              </span>
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
+  componentWillMount() {
+    const diaryTotal = localforage.getItem('diaryTotal', (err, value) => {
+      // if err is non-null, we got an error. otherwise, value is the value
+      console.log('err', err)
+      const diaryTotal = value || {allNotes: 1, starred: 0, trash: 0, myStorage: [{id: '000001', key: 'default', count: 1}]}
+      this.setState({diaryTotal});
+    });
+  }
   render() {
+    const {diaryTotal} = this.state;
+    if (!diaryTotal) {
+      return <span>loading</span>
+    }
+    let topButtonMenu = this.topButtonMenu.map((v) => {
+      console.log('v.key', v.key, diaryTotal)
+      v.count = diaryTotal[v.key]
+      return v
+    })
     return (
       <div style={styles.container}>
         <div style={styles.list}>
           {this.topButtonMenu.map((v, i) => this.renderMenuChild(v, i))}
           <div style={{marginTop: 48}}>
-            {this.bottomButtonMenu.map((v, i) => this.renderMenuChild(v, i))}
+            <this.folderComponent
+              onClick={() => {
+                const {folderOpen} = this.state          
+                this.setState({folderOpen: !folderOpen})
+              }}
+              folderOpen={this.state.folderOpen}
+            />
           </div>
+          <this.Collapse open={this.state.folderOpen} data={diaryTotal.myStorage} />
         </div>
       </div>
     )
@@ -76,3 +153,13 @@ class Menu extends Component {
 }
 
 export default Menu
+/*
+const mockDiary = {
+  allNotes: total,
+  starred: total,
+  trash: total,
+  myStorage: [
+    {id, key, total}
+  ]
+}
+*/
