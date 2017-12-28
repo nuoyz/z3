@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import moment from 'moment'
-import store from 'store'
 import TextField from 'material-ui/TextField'
+import NoteAdd from 'material-ui-icons/NoteAdd'
+import localforage from 'localforage'
 
 const styles = {
   container: {
@@ -14,8 +15,8 @@ const styles = {
     borderRightColor: '#ececec'
   },
   headerLeft: {
-    display: 'block',
-    width: 'fit-content',
+    display: 'inline-block',
+    width: 240,
     paddingTop: 24,
     paddingRight: 20,
     paddingBottom: 0,
@@ -34,34 +35,35 @@ const styles = {
     fontSize: 13,
     padding: '0 24px',
     marginTop: 32
+  },
+  itemStyle: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',          
+    flexGrow: 0,
+    flexShrink: 0,
+    height: 60,
+    textAlign: 'left',
+    overflow: 'hidden',
+    color: '#878787',
+    border: '3px solid #d9d9d9',
+    padding: '12px 24px 15px 24px',
+    borderType: 'solid ',
+    borderColor: '#d9d9d9',
+    borderBottomWidth: 1
   }
 }
 class DiariesList extends Component {
   state = {}
   renderItem = (v) => {
     const {activeId} = this.state
+    const borderWidth = activeId === v.id ? 3 : 0
     return (
       <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',          
-          flexGrow: 0,
-          flexShrink: 0,
-          height: 60,
-          textAlign: 'left',
-          overflow: 'hidden',
-          color: '#878787',
-          border: '3px solid #d9d9d9',
-          padding: '12px 24px 15px 24px',
-          borderType: 'solid ',
-          borderColor: '#d9d9d9',
-          borderWidth: activeId === v.id ? 3 : 0,
-          borderBottomWidth: 1
-        }}
+        style={{borderWidth, ...styles.itemStyle}}
         onClick={() => {
           console.log('id', v.id)
-          window.rdEvent.emit('activeUpdate', v.id)
+          window.rdEvent.emit('openDiary', v.id)
           this.setState({activeId: v.id})
         }}
       >
@@ -91,33 +93,38 @@ class DiariesList extends Component {
     )
   }
   componentWillMount() {
-    let diariesList = store.get('diariesList')
-    console.log('diariesList', diariesList)
-    if (!Array.isArray(diariesList)) {
-      diariesList = []
-    }
-    this.setState({diariesList})
   }
   componentDidMount() {
+    window.rdEvent.on('openDiaryFolderById', (id) => {
+      const allDiaries = localforage.getItem('allDiaries', (err, value) => {
+        if (err) {
+          console.log(err)
+        }
+        const allDiaries = value || [
+          {id: '000001', diaries: [{id: '100001', title: 'welcome', date: moment().unix()}]}
+        ]
+        const index = allDiaries.findIndex((v) => {
+          return v.id === id
+        })
+        this.setState({idDiaries: allDiaries[index].diaries})
+      })
+    })
     window.rdEvent.on('openEditor', () => {
       //this.setState({display: 'none'})
     })
-    window.rdEvent.on('editUpdate', () => {
-      const diariesList = store.get('diariesList')
-      this.setState({diariesList})
-    })
   }
   render() {
-    const {diariesList} = this.state
+    const {diariesList, idDiaries} = this.state
     return (
       <div style={styles.container}>
         <TextField placeholder="search" style={styles.headerLeft}/>
+        <NoteAdd/>
         <div style={styles.headerRight}>
           <span>> update</span>
           <span>=</span>
         </div>
         <div style={{height: 836, overflowX: 'hidden', overflowY: 'auto', boxSizing: 'border-box'}}>
-          {diariesList.map((v) => this.renderItem(v))}
+          {idDiaries && idDiaries.map((v) => this.renderItem(v))}
         </div>
       </div>
     )
@@ -125,3 +132,8 @@ class DiariesList extends Component {
 }
 
 export default DiariesList
+/*
+const mockAllDiaies = [
+  {id: '000001', diaries: [id: '100001', title, date]},
+]
+*/

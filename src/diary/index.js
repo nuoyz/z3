@@ -12,7 +12,9 @@ import DeleteForever from 'material-ui-icons/DeleteForever'
 import Dialog, {DialogActions, DialogContent, DialogContentText, DialogTitle} from 'material-ui/Dialog'
 import Slide from 'material-ui/transitions/Slide'
 import TextField from 'material-ui/TextField'
-import store from 'store'
+import localforage from 'localforage'
+import {fromJS, Record} from 'immutable'
+import initialValue from './editor/slateEditor/value.json'
 
 const options = [
   'None',
@@ -53,21 +55,28 @@ class Diary extends Component {
   handleClose = () => {
     this.setState({open: false})
   }
-  getDiaryProp = (id) => {
-     const diariesList = store.get('diariesList')
-     const targetIndex = diariesList.findIndex((v) => {
-       return v.id === id
-     })
-     const targetDiary = diariesList[targetIndex]
-     console.log('diariesList', diariesList);
-     console.log('targetDiary', targetDiary)
-     return {
-      value: targetDiary.value,
-      title: targetDiary.title,
-      id
-     }
+  getDiaryProp = () => {
+  }
+  getDiaryPropById = (id) => {
+    localforage.getItem('diaries', (err, value) => {
+      if (err) {
+        console.log(err)
+      }
+      const diaryColl = value || [
+        {id: '100001', diary: initialValue}
+      ]
+    })
   }
   componentDidMount() {
+    window.rdEvent.on('openDiary', (id) => {
+      localforage.getItem('diary', (err, value) => {
+        const initialValue = require('./editor/slateEditor/value.json')
+        console.log('initialValues', initialValue);
+        const diaryCol = value || [{id: '100001', title: 'welcome', diary: initialValue}];
+        const index = diaryCol.findIndex((v) => v.id === id)    
+        this.setState({activeId: id, diary: diaryCol[index]})
+      })
+    })
     window.rdEvent.on('openEditor', () => {
       console.log('render render render')
       this.setState({
@@ -76,17 +85,13 @@ class Diary extends Component {
         marginLeft: 0
       })
     })
-    window.rdEvent.on('activeUpdate', (id) => {
-      console.log('activeUpdate')
-      const {value, title} = this.getDiaryProp(id)
-      this.setState({slateValue: value, titleValue: title, activeId: id})
+    window.rdEvent.on('activeDiary', () => {
+
     })
   }
   render() {
-    const {marginLeft = 422} = this.state
+    const {marginLeft = 422, diary} = this.state
     const open = Boolean(this.state.anchorEl)
-    console.log('this.state.anchorEl', this.state.activeId, this.state.slateValue)
-
     return (
       <div
         style={{
@@ -181,8 +186,7 @@ class Diary extends Component {
         >
           <SlateEditor
             activeId={this.state.activeId}
-            slateValue={this.state.slateValue}
-            titleValue={this.state.titleValue}
+            diary={diary}
             onChange={(v) => {
               // const diariesList = localStorage.getItem(diariesList)
               // diariesList.push(v)

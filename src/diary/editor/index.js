@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import store from 'store';
+import localforage from 'localforage';
 import RichTextExample from './slateEditor/slateEditor';
+import { localeData } from 'moment';
 
 const styles = {
   container: {
@@ -34,36 +36,78 @@ class SlateEditor extends Component {
       </div>
     );
   }
+  onChangeTitleditorEvent = (title) => {
+    const id = this.props.activeId;
+    localforage.getItem('diary', (err, value) => {
+      const diary = value || [{id: '100001', title: 'welcome', diary: ''}];
+      const index = value.findIndex((v) => v.id === id)
+      if (~index) {
+        const id = Math.random()
+          .toString(36)
+          .substr(2)
+        diary.unshift({id, title: title, diary: ''})
+      } else {
+        diary[index].title = title;
+      }
+      localforage.setItem('diary', diary) 
+    })
+  }
+  onChangeEditorEvent = (slateValue) => {
+    const id = this.props.activeId;
+    localforage.getItem('diary', (err, value) => {
+      const diary = value || [{id: '100001', title: 'welcome', diary: ''}];
+      console.log('vvvvvvvv, v', diary);
+      const index = diary.findIndex((v) => v.id === id)
+      if (~index) {
+        const id = Math.random()
+          .toString(36)
+          .substr(2)
+        diary.unshift({id, title: '', diary: slateValue})
+      } else {
+        diary[index].diary = slateValue;
+      }
+      localforage.setItem('diary', diary)      
+    })
+  }
+  componentWillMount() {
+  }
+  componentDidMount() {
+    window.rdEvent.on('diary', () => {
+    
+    })
+  }
   render(){
-  return (
-    <div
-      style={{
-        flexGrow: 1,
-        flexShrink: 1,
-        maxWidth: 960,
-        minWidth: 240,
-        width: 720,
-        transition: 'width 0.3s ease-in-out, margin 0.3s ease-in-out, left 1s ease-in-out',
-      }}
-    >
-      <div style={styles.textarea}>
-        <RichTextExample
-          slateValue={this.props.slateValue}
-          titleValue={this.props.titleValue}
-          onChange={(v)=> {
-            //获取 id
-            const {activeId} = this.props;
-            const slateValue = v;
-            const diariesList = store.get('diariesList');
-            console.log('diariesList', diariesList);
-            const index = diariesList.findIndex((v) => v.id == activeId);
-            diariesList[index].value = slateValue;
-            store.set('diariesList', diariesList);
+    const {diary} = this.props;
+    return (
+      <div
+        style={{
+          flexGrow: 1,
+          flexShrink: 1,
+          maxWidth: 960,
+          minWidth: 240,
+          width: 720,
+          transition: 'width 0.3s ease-in-out, margin 0.3s ease-in-out, left 1s ease-in-out',
         }}
-      />
+      >
+        <div style={styles.textarea}>
+        {diary &&
+          <RichTextExample
+            slateValue={diary.diary}
+            titleValue={diary.title}
+            onChangeTitleEvent={this.onChangeTitleEvent}
+            onChangeEditorEvent={this.onChangeEditorEvent}
+          />
+        }
+        </div>
       </div>
-    </div>
-  )
+    )
 }}
 
 export default SlateEditor;
+/*
+mockdata
+ [{
+   id, title, diary
+ }]
+
+*/

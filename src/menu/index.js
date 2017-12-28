@@ -100,6 +100,10 @@ class Menu extends Component {
             <div
               key={`{value.id}-${index}`}
               style={styles.collapseChildStyle}
+              onClick={()=>{
+                console.log()
+                window.rdEvent.emit('openDiaryFolderById', value.id)
+              }}
             >
               <Folder/>
               <div style={{display: 'inline-block', 'verticalAlign': 'top', height: 36, marginLeft: 20}}>
@@ -115,7 +119,7 @@ class Menu extends Component {
     )
   }
   componentWillMount() {
-    const diaryTotal = localforage.getItem('diaryTotal', (err, value) => {
+    localforage.getItem('diaryTotal', (err, value) => {
       // if err is non-null, we got an error. otherwise, value is the value
       console.log('err', err)
       const diaryTotal = value || {allNotes: 1, starred: 0, trash: 0, myStorage: [{id: '000001', key: 'default', count: 1}]}
@@ -159,7 +163,7 @@ const mockDiary = {
   starred: total,
   trash: total,
   myStorage: [
-    {id, key, total}
+    {allNotes: 1, starred: 0, trash: 0, myStorage: [{id: '000001', key: 'default', count: 1}]}
   ]
 }
 */

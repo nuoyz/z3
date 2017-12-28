@@ -3,8 +3,6 @@ import {Value} from 'slate'
 import store from 'store'
 
 import React from 'react'
-import {Map, fromJS} from 'immutable'
-import initialValue from './value.json'
 import {isKeyHotkey} from 'is-hotkey'
 import TextField from 'material-ui/TextField'
 import './index.css'
@@ -40,9 +38,7 @@ class RichTextExample extends React.Component {
    * @type {Object}
    */
 
-  state = {
-    value: Value.fromJSON(initialValue)
-  }
+  state = {}
 
   /**
    * Check if the current selection has a mark with `type` in it.
@@ -77,9 +73,15 @@ class RichTextExample extends React.Component {
    */
 
   onChange = ({value}) => {
-    console.log('Valie value555555555', value)
     this.setState({value})
-    this.props.onChange(value)
+    console.log('value value', value);
+    console.log('json stringify', value.toJSON());
+    this.props.onChangeEditorEvent(value.toJSON())
+  }
+
+  handle82Event = (e) => {
+    const titleValue = e.target.value
+    this.props.onChangeTitleEvent(titleValue)
   }
 
   /**
@@ -179,48 +181,25 @@ class RichTextExample extends React.Component {
    */
 
   componentWillMount() {
-    const {slateValue} = this.props
-    console.log('slateValue3333333', Value.fromJSON(initialValue))
-    if (slateValue) {
-      this.setState({})
-    }
-    this.setState({value: slateValue || Value.fromJSON(initialValue)})
+    const {slateValue} = this.props;
+    console.log('slateValue', slateValue);
+    this.setState({value: Value.fromJS(slateValue)})
   }
-  componentWillReceiveProps(nextProps) {
-    console.log('nextPops', nextProps.slateValue);
-    let nextSlateValue = nextProps.slateValue;
-    if (! Map.isMap(nextSlateValue)) {
-      nextSlateValue = fromJS(nextSlateValue);
-    }
-    console.log('nextSlateValue', nextSlateValue);
-    this.setState({value: Value.fromJS(nextSlateValue) || Value.fromJSON(initialValue)})
-    this.forceUpdate()
-  }
+  componentWillReceiveProps() {}
   render() {
-    console.log('titleValue', this.props.titleValue)
-    console.log('render2222222222', this.state.value);
+    const {titleValue} = this.props
     return (
       <div>
         {this.renderToolbar()}
         <TextField
           id="full-width"
-          InputLabelProps={{
-            shrink: true
-          }}
+          InputLabelProps={{shrink: true}}
           placeholder="Title"
           helperText="Full width!"
           fullWidth
           margin="normal"
-          value={this.props.titleValue}
-          onChange={(e) => {
-            const value = e.target.value
-            const diariesList = store.get('diariesList')
-            console.log('diariesList', diariesList)
-            const index = diariesList.findIndex((v) => v.active)
-            diariesList[index].title = value
-            store.set('diariesList', diariesList)
-            window.rdEvent.emit('editUpdate')
-          }}
+          value={titleValue}
+          onChange={this.handleInputEvent}
         />
         {this.renderEditor()}
       </div>
@@ -234,7 +213,6 @@ class RichTextExample extends React.Component {
    */
 
   renderToolbar = () => {
-    console.log('1111111111111111');
     return (
       <div className="menu toolbar-menu">
         {this.renderMarkButton('bold', 'format_bold')}
