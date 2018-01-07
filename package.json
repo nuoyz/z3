@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "antd": "^3.1.0",
     "cnpm": "^5.1.1",
     "events": "^1.1.1",
     "immutable": "^3.8.2",

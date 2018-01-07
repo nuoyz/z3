@@ -36,12 +36,12 @@ class SlateEditor extends Component {
       </div>
     );
   }
-  onChangeTitleditorEvent = (title) => {
+  onChangeTitleEvent = (title) => {
     const id = this.props.activeId;
     localforage.getItem('diary', (err, value) => {
       const diary = value || [{id: '100001', title: 'welcome', diary: ''}];
       const index = value.findIndex((v) => v.id === id)
-      if (~index) {
+      if (!~index) {
         const id = Math.random()
           .toString(36)
           .substr(2)
@@ -49,6 +49,7 @@ class SlateEditor extends Component {
       } else {
         diary[index].title = title;
       }
+      console.log('diary', diary)
       localforage.setItem('diary', diary) 
     })
   }
@@ -56,9 +57,9 @@ class SlateEditor extends Component {
     const id = this.props.activeId;
     localforage.getItem('diary', (err, value) => {
       const diary = value || [{id: '100001', title: 'welcome', diary: ''}];
-      console.log('vvvvvvvv, v', diary);
       const index = diary.findIndex((v) => v.id === id)
-      if (~index) {
+      console.log('vvvvvvvv, v', diary, slateValue, index, id);      
+      if (!~index) {
         const id = Math.random()
           .toString(36)
           .substr(2)
@@ -78,6 +79,7 @@ class SlateEditor extends Component {
   }
   render(){
     const {diary} = this.props;
+    console.log('diary', diary)
     return (
       <div
         style={{

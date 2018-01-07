@@ -79,8 +79,9 @@ class RichTextExample extends React.Component {
     this.props.onChangeEditorEvent(value.toJSON())
   }
 
-  handle82Event = (e) => {
+  handleInputEvent = (e) => {
     const titleValue = e.target.value
+    console.log('titleValue', titleValue);
     this.props.onChangeTitleEvent(titleValue)
   }
 
@@ -182,8 +183,10 @@ class RichTextExample extends React.Component {
 
   componentWillMount() {
     const {slateValue} = this.props;
-    console.log('slateValue', slateValue);
-    this.setState({value: Value.fromJS(slateValue)})
+    console.log('slateValue', slateValue, Value.fromJS(slateValue));
+    if (slateValue) {
+      this.setState({value: Value.fromJS(slateValue)})
+    }
   }
   componentWillReceiveProps() {}
   render() {
